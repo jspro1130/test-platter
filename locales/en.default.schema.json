@@ -684,8 +684,27 @@
       "name": "Test",
       "presets": {
         "name": "Test"
+      },
+      "settings": {
+        "title": {
+          "default": "Best seller",
+          "label": "Heading"
+        },
+        "product_item": {
+          "label": "Product Item"
+        }
+      },
+      "blocks": {
+        "product_item": {
+          "name": "Product Item",
+          "settings": {
+            "product": {
+              "label": "Product"
+            }
+          }
+        }
       }
-    }
+    },
     "custom-liquid": {
       "name": "Custom Liquid",
       "settings": {
