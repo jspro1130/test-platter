@@ -680,6 +680,12 @@
         }
       }
     },
+    "test": {
+      "name": "Test",
+      "presets": {
+        "name": "Test"
+      }
+    }
     "custom-liquid": {
       "name": "Custom Liquid",
       "settings": {
