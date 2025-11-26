@@ -18,6 +18,8 @@ module.exports = {
     extend: {
       fontFamily: {
         heading: 'var(--font-heading-family)',
+        bebas: ['Bebas Neue', 'cursive'],
+        poppins: ['Poppins', 'sans-serif'],
       },
     },
   },

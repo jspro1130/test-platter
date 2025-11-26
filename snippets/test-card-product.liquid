@@ -1,0 +1,82 @@
+{% comment %}
+  Renders a simple product card with image, title, and price
+  
+  Accepts:
+  - product: {Object} Product Liquid object (required)
+{% endcomment %}
+
+{%- if product and product != empty -%}
+  {%- liquid
+    assign has_best_seller_tag = false
+    for tag in product.tags
+      if tag == 'best_seller'
+        assign has_best_seller_tag = true
+        break
+      endif
+    endfor
+    
+    assign sale_percentage = 0
+    if product.compare_at_price > product.price
+      assign discount = product.compare_at_price | minus: product.price
+      assign sale_percentage = discount | times: 100.0 | divided_by: product.compare_at_price | round
+    endif
+  -%}
+  
+  <div class="flex flex-col">
+    {%- if product.featured_media -%}
+      <a href="{{ product.url }}" class="block mb-3 w-full aspect-square rounded-[10px] overflow-hidden relative">
+        <img
+          srcset="
+            {%- if product.featured_media.width >= 165 -%}{{ product.featured_media | image_url: width: 165 }} 165w,{%- endif -%}
+            {%- if product.featured_media.width >= 360 -%}{{ product.featured_media | image_url: width: 360 }} 360w,{%- endif -%}
+            {%- if product.featured_media.width >= 533 -%}{{ product.featured_media | image_url: width: 533 }} 533w,{%- endif -%}
+            {%- if product.featured_media.width >= 720 -%}{{ product.featured_media | image_url: width: 720 }} 720w,{%- endif -%}
+            {%- if product.featured_media.width >= 940 -%}{{ product.featured_media | image_url: width: 940 }} 940w,{%- endif -%}
+            {%- if product.featured_media.width >= 1066 -%}{{ product.featured_media | image_url: width: 1066 }} 1066w,{%- endif -%}
+            {{ product.featured_media | image_url }} {{ product.featured_media.width }}w
+          "
+          src="{{ product.featured_media | image_url: width: 533 }}"
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, (min-width: 640px) 50vw, 100vw"
+          alt="{{ product.featured_media.alt | escape }}"
+          class="w-full h-full rounded-[10px] object-cover"
+          loading="lazy"
+          width="{{ product.featured_media.width }}"
+          height="{{ product.featured_media.height }}"
+        >
+        {%- if has_best_seller_tag -%}
+          <span class="absolute top-2 left-2 bg-white text-black text-xs font-bold px-3 py-1 rounded-full shadow-md border border-black font-bebas">
+            Best Seller
+          </span>
+        {%- endif -%}
+        {%- if sale_percentage > 0 -%}
+          <span class="absolute top-2 right-2 bg-[#5C7962] text-white text-xs font-bold px-3 py-1 rounded-full shadow-md font-bebas">
+            Save {{ sale_percentage }}%
+          </span>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+    
+    <div class="flex flex-col">
+      <h3 class="font-bebas font-normal text-[18px] leading-[100%] tracking-[0.03em] uppercase text-gray-900">
+        <a href="{{ product.url }}" class="hover:text-gray-700">
+          {{ product.title | escape }}
+        </a>
+      </h3>
+      <div class="mt-3 flex flex-wrap items-center gap-2 font-poppins font-normal text-[12px] leading-[100%] tracking-normal text-gray-900">
+        {% render 'icon-star' %}
+        1,234 Reviews
+      </div>
+      <div class="mt-4 font-poppins font-medium text-[16px] leading-[100%] tracking-normal uppercase text-gray-900">
+        {%- if product.price_varies -%}
+          <span>{{ product.price_min | money }} - {{ product.price_max | money }}</span>
+        {%- else -%}
+          <span>{{ product.price | money }}</span>
+        {%- endif -%}
+        {%- if product.compare_at_price > product.price -%}
+          <span class="text-gray-500 line-through ml-2">{{ product.compare_at_price | money }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
