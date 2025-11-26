@@ -1,3 +1,9 @@
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<!-- Swiper CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 {%- style -%}
   .section-{{ section.id }}-padding {
     padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
@@ -12,6 +18,93 @@
   }
 {%- endstyle -%}
 
+{%- liquid
+  assign products_to_display = 10
+  if section.settings.collection != blank
+    assign collection = section.settings.collection
+  endif
+-%}
+
+<div class="section-{{ section.id }}-padding bg-white">
+  <div class="container mx-auto px-4">
+    {%- if section.settings.title != blank -%}
+      <div class="mb-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900">
+          {{ section.settings.title }}
+        </h2>
+      </div>
+    {%- endif -%}
+
+    {%- if collection != blank and collection.products.size > 0 -%}
+      <div class="swiper test-swiper-{{ section.id }} relative">
+        <div class="swiper-wrapper">
+          {%- for product in collection.products limit: products_to_display -%}
+            <div class="swiper-slide">
+              <div class="px-2">
+                {% render 'card-product',
+                  card_product: product,
+                  media_aspect_ratio: 'square',
+                  show_secondary_image: false,
+                  show_vendor: false,
+                  show_rating: true,
+                  skip_styles: false,
+                  section_id: section.id
+                %}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        
+        <!-- Pagination -->
+        <div class="swiper-pagination test-swiper-pagination-{{ section.id }} !relative !mt-8"></div>
+      </div>
+    {%- else -%}
+      <div class="text-center py-12">
+        <p class="text-gray-600">No products found in this collection.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new Swiper('.test-swiper-{{ section.id }}', {
+      slidesPerView: 1,
+      spaceBetween: 20,
+      loop: true,
+      arrows: false,
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: '.test-swiper-pagination-{{ section.id }}',
+        type: "progressbar",
+      },
+      navigation: {
+        nextEl: '.test-swiper-button-next-{{ section.id }}',
+        prevEl: '.test-swiper-button-prev-{{ section.id }}',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 3,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3.6,
+          spaceBetween: 24,
+        },
+        1024: {
+          slidesPerView: 4.6,
+          spaceBetween: 24,
+        },
+      },
+    });
+  });
+</script>
+
 
 {% schema %}
 {
@@ -23,15 +116,15 @@
   },
   "settings": [
     {
-        "type": "text",
-        "id": "title",
-        "label": "t:sections.test.settings.title.label",
-        "default": "t:sections.test.settings.title.default"
+      "type": "text",
+      "id": "title",
+      "label": "t:sections.test.settings.title.label",
+      "default": "t:sections.test.settings.title.default"
     },
     {
-        "type": "collection",
-        "id": "collection",
-        "label": "t:sections.test.settings.collection.label"
+      "type": "collection",
+      "id": "collection",
+      "label": "t:sections.test.settings.collection.label"
     },
     {
       "type": "header",
