@@ -1,0 +1,4 @@
+[environments.dev]
+theme = "135060455527"
+store = "blueball-dev-store"
+path = "./"
