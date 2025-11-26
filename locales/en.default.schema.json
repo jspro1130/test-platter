@@ -690,18 +690,8 @@
           "default": "Best seller",
           "label": "Heading"
         },
-        "product_item": {
-          "label": "Product Item"
-        }
-      },
-      "blocks": {
-        "product_item": {
-          "name": "Product Item",
-          "settings": {
-            "product": {
-              "label": "Product"
-            }
-          }
+        "collection": {
+          "label": "Collection"
         }
       }
     },
